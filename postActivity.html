@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+   
+
+	
+</head>
+<body style="height: 780px">
+    <h3 align="center"> 2023/10/06 FHIR working with chatGPT </h3>
+    <p align="center" id="retMessage"></p>
+    <table align="center" style="border: solid 2px gray;" id="register-table">
+    <tr>   <td> 姓名:</td>        <td><input type="text" id="pName" /></td></tr>
+    <tr>   <td>機構及職稱:</td>    <td><input type="text" id="pOrg" /> </td></tr>          
+    <tr>   <td>email:</td>        <td> <input type="text" id="email" />  </td></tr>     
+    <tr>   <td>中午餐盒:</td>      <td>      素<input type="radio" name="vMeal" id="vMealYes"><br/>
+        葷<input type="radio" name="vMeal" id="vMealNo"> </td></tr>              
+    <tr><td> <input   id="Button1" onclick="postData()"  type="button" value="postData" /></td>    </tr> 
+    </table>
+     
+ 
+</body>
+<script src="setting.js"></script>
+<script src="HTTP2019.js"></script>
+<script>
+ var myObj = {
+"resourceType": "Person",
+"active": "true",
+"identifier": [ 
+    {
+        "system": "UserID: Email",
+        "value": "victoriatjiaa@gmail.com"
+    }, 
+    {
+        "system": "Password",
+        "value": ""
+    },
+    {
+        "system": "Organization and position",
+        "value": ""
+    }
+],
+"name": [ {
+    "text": "Victoria Tjia"
+} ],
+"maritalStatus":"",
+"managingOrganization": {
+    "reference": "Organization/4936"  }
+};
+ 
+ 
+function postData() {
+
+   myObj.name[0].text =  document.getElementById("pName").value; 
+   myObj.identifier[0].value =document.getElementById("email").value;
+ //  myObj.identifier[1].value = document.getElementById("pwd").value;
+   myObj.identifier[2].value = document.getElementById("pOrg").value;
+   if(document.getElementById("vMealYes").checked == true)
+           {myObj.maritalStatus = "vMealYes";    }
+       else    {myObj.maritalStatus  = "vMealNo";    }  
+
+
+   var jsonStr = JSON.stringify(myObj);
+  // alert(jsonStr);
+   
+   var apiURL;
+   apiURL = FHIRrootURL  + "api/register";
+ 
+   HTTPPostData(apiURL, jsonStr);
+   
+}
+
+function callBack(ret) {
+       // alert(ret);
+        /* ret= {"regRet": status};
+         status = 0; // "email account aleary exist"
+         status = 1; // "sign up scucess "
+         */
+         var retJSON= JSON.parse(ret);
+         var retStatus = retJSON.regRet;
+         if(retStatus == 0)
+             { document.getElementById("retMessage").innerText="email account aleary exist"; }
+         if(retStatus == 1)
+             { document.getElementById("retMessage").innerText="報名成功"; }
+    }
+
+    </script>	
+</html>
