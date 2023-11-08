@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>FHIR Condition 上傳</title>
+   
+    <script src="setting.js"></script>
+    <script src="Cookie.js"></script> 
+    <script src="dateTime.js"></script> 
+    <script src="HTTP2024.js"></script>
+
+    <script>
+        //condition.js
+
+        var conditionObj = {
+            "resourceType": "Condition",
+            "clinicalStatus": {
+                "coding": [
+                    {
+                        "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                        "code": "active"
+                    }
+                ],
+                "text": "Active"
+            },
+            "verificationStatus": {
+                "coding": [
+                    {
+                        "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                        "code": "confirmed"
+                    }
+                ],
+                "text": "Confirmed"
+            },
+            "code": {
+                "coding": [
+                    { 
+                        "system": "http://snomed.info/sct",
+                        "code": "91175000",
+                        "display": "Dry mouth (finding)"
+                    }
+                ],
+                "text": "口乾"
+            },
+            "subject": {
+                "reference": "Patient/23538325",
+                "display": "陳奕翔"
+            },
+            "onsetDateTime": "2023-09-15T10:30:00Z", 
+            "severity": {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/sct",
+                        "code": "255604002"
+                    }
+                ],
+                "text": "輕微"
+            }
+        };
+
+        function postData() {
+            var severitySelect = document.getElementById("severity");
+            var selectedSeverity = severitySelect.options[severitySelect.selectedIndex].value;
+
+            // 更新嚴重程度相關的部分
+            conditionObj.severity.coding[0].code = selectedSeverity;
+            conditionObj.severity.text = severitySelect.options[severitySelect.selectedIndex].text;
+
+            var jsonStr = JSON.stringify(conditionObj);
+            var apiURL = FHIRrootURL + "Condition";
+            sendHttpPost(apiURL, jsonStr, callBack);
+        }
+
+        function callBack(ret) {
+            console.log(ret);    
+        }
+    </script>    
+    
+</head>
+<body style="height: 780px">
+ 
+    <h1>FHIR Condition 上傳</h1>
+
+    <form id="conditionForm">
+        <p>請上傳口乾症狀</p>
+
+
+        <!-- 增加口乾症狀的相關欄位 -->
+        <label for="onsetDateTime">發病日期時間:</label>
+        <input type="datetime-local" id="onsetDateTime" value="2023-10-10T10:30:00" /><br/><br/>
+
+        <label for="severity">嚴重程度:</label>
+        <select id="severity">
+            <option value="255604002">無</option>
+            <option value="6736007">輕微</option>
+            <option value="24484000">中度</option>
+            <option value="67782005">嚴重</option>
+        </select><br/><br/>
+        <button type="button" onclick="postData()">上傳 Condition</button><br/><br/>
+    </form>
+  
+</body>
+</html>
