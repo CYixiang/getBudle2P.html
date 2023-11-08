@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>FHIR Condition 上傳</title>
+   
+    <script src="setting.js"></script>
+    <script src="Cookie.js"></script> 
+    <script src="dateTime.js"></script> 
+    <script src="HTTP2024.js"></script>
+
+    <script>
+        //condition.js
+
+        var conditionObj = {
+  "resourceType": "Observation",
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "XXX",  
+        "display": "肝炎病毒檢查" 
+      }
+    ],
+    "text": "A型"  
+  },
+  "subject": {
+    "reference": "Patient/26965590" 
+  },
+  "effectiveDateTime": "2023-10-17T08:00:00Z",
+  "valueQuantity": {
+    "value": 10.5, 
+    "unit": "IU/mL",  
+    "system": "http://unitsofmeasure.org",
+    "code": "IU/mL"
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.0,
+        "unit": "IU/mL",
+        "system": "http://unitsofmeasure.org",
+        "code": "IU/mL"
+      },
+      "high": {
+        "value": 15.0,
+        "unit": "IU/mL",
+        "system": "http://unitsofmeasure.org",
+        "code": "IU/mL"
+      }
+    }
+  ]
+}
+        function postData() {
+            conditionObj.valueQuantity.value=document.getElementById("value").value;
+            // 更新嚴重程度相關的部分
+            var selectElement = document.getElementById("severity");
+
+// 获取选中的<option>元素
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            // 获取选中项的值和文本
+            conditionObj.code.text = selectedOption.value+"型";
+            //conditionObj.severity.text = severitySelect.options[severitySelect.selectedIndex].text;
+
+            var jsonStr = JSON.stringify(conditionObj);
+            var apiURL = FHIRrootURL + "Observation?subject=23549468";
+            sendHttpPost(apiURL, jsonStr, callBack);
+        }
+
+        function callBack(ret) {
+            console.log(ret);    
+        }
+    </script>    
+    
+</head>
+<body style="height: 780px">
+ 
+    <h1>FHIR Condition 上傳</h1>
+
+    <form id="conditionForm">
+        <p>請上傳肝炎病毒檢查</p>
+        <!-- 增加口乾症狀的相關欄位 -->
+        <label for="onsetDateTime">發病日期時間:</label>
+        <input type="datetime-local" id="onsetDateTime" value="2023-10-10T16:30:00" /><br/><br/>
+
+        <label for="severity">病毒類型:</label>
+        <select id="severity">
+            <option value="A">A型</option>
+            <option value="B">B型</option>
+            <option value="C">C型</option>
+            <option value="D">D型</option>
+            <option value="E">E型</option>
+        </select><br/><br/>
+        <label>
+            肝炎病毒指數:
+            <input type="text" id="value" name="username">
+          </label>
+        <p></p>  
+        <button type="button" onclick="postData()">上傳 Observation</button><br/><br/>
+    </form>
+  
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
