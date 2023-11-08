@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+   
+  <script src="setting.js"></script>
+  <script src="Cookie.js"></script> 
+  <script src="HTTP2019.js"></script>
+  <script src="Temperature.js"></script>
+ <script>
+  
+	 
+   function postData()
+   {
+    
+    bodyTemperature.valueQuantity.value = parseFloat(document.getElementById("bodyTemperature").value);
+    bodyTemperature.subject.reference =  "Patient/" + document.getElementById("FHIRPtionID").value;
+    bodyTemperature.subject.display = document.getElementById("name").value;  
+    var jsonStr = JSON.stringify(bodyTemperature);
+    //alert(jsonStr);
+    var apiURL;
+    apiURL = FHIRrootURL + '/' + "Observation";
+    HTTPPostData( apiURL,jsonStr);
+   } 
+  
+	
+</script>	
+	
+</head>
+<body style="height: 780px">
+    名字:
+    <input type="text" name="pateintName" value="Mickey" id="name"/> &nbsp;
+    FHIR patient id:
+    <input type="text"  value="unknown" id="FHIRPtionID"/>  <br/>
+
+    <p>過去病史及健康狀況</p>
+   
+     <input id="Button1" onclick="postData()"  type="button" value="postData" /><br/>
+     
+     體溫: <input type="text" id="bodyTemperature" />  <br/>
+
+  
+  
+</body>
+<script >
+    document.getElementById("FHIRPtionID").value = getCookie("patientID");
+    document.getElementById("name").value = getCookie("patientName");
+
+</script>
+</html>
