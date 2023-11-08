@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title> Get FHIR Resource</title>
+ 	<script src="setting.js"></script>
+    <script src="HTTP2024.js"></script>
+ 
+</head>
+<body>
+    <div id="Title">Get Bundle</div>
+    <p></p>
+    <input id="Button2" onclick="getData()" type="button" value="Get data" />
+     <p></p>
+    <div id="observations"></div>
+    <script>
+       
+        function getData() {
+           /* var dataString = document.getElementById("fullURL").value;
+            var apiURL;
+            apiURL = document.getElementById("fullURL").value;
+            HTTPGetData(apiURL); */
+            
+           apiURL ="https://hapi.fhir.org/baseR4/Observation?code=8867-4&subject=30163";
+           //https://hapi.fhir.org/baseR4/Observation?code=8310-5&subject=42024";
+           //http://hapi.fhir.org/baseR4/Observation?code=8310-5";
+          // apiURL ="https://hapi.fhir.tw/fhir/Patient";
+        
+          // HTTPGetData(apiURL); 
+          sendHttpGet(apiURL,callBack );
+        }
+
+  
+function callBack(ret) {
+    
+//    document.getElementById("TextArea1").value = ret;
+
+// 解析 FHIR Bundle JSON 数据
+//alert(ret);
+const bundle = JSON.parse(ret);
+ // Find the div tag to append the results
+ const div = document.getElementById('observations');
+// 检查 Bundle 的类型
+if (bundle.resourceType === "Bundle") {
+  // 获取 entry 数组的长度
+  const entryCount = bundle.entry.length;
+  
+   // 创建一个空字符串来存储输出
+   let output = "";
+  // 使用 for 循环遍历每个 entry
+  for (let i = 0; i < entryCount; i++) {
+   // const entry = bundle.entry[i]; 
+    thisResource =bundle.entry[i].resource;
+    id= thisResource.id;
+    const temperatureValue =  thisResource.valueQuantity.value;
+    const measurementTime =  thisResource.effectiveDateTime;
+    const DryMouth= thisResource.valueQuantity.value;
+    const p = document.createElement('p');
+    p.innerText = `Time: ${measurementTime} ,Drymouth:${DryMouth}`;
+    div.appendChild(p);
+    }
+    
+   }
+ 
+ }  
+ 
+ </script>
+</body>
+</html>
