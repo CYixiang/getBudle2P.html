@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Provider 子系統</title>
+</head>
+<body>
+    <h1>Provider 子系統</h1>
+    <form id="medicalRecordForm">
+        <p>上傳就醫及檢查信息</p>
+        <label for="patientName">患者姓名:</label>
+        <input type="text" id="patientName" /><br/><br/>
+        <label for="medicalResult">檢查結果:</label>
+        <input type="text" id="medicalResult" /><br/><br/>
+        <button type="button" onclick="postData()">上傳信息</button>
+    </form>
+    <script>
+        function postData() {
+            const patientName = document.getElementById("patientName").value;
+            const medicalResult = document.getElementById("medicalResult").value;
+
+            // 模擬上傳就醫及檢查信息到伺服器的操作
+            fetch('/upload-medical-record', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ patientName, medicalResult }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message); // 顯示成功消息
+            });
+        }
+    </script>
+</body>
+</html>
