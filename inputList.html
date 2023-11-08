@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title></title>
+
+  <script src="setting.js"></script>
+  <script src="Cookie.js"></script>
+  <script src="HTTP2019.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script>
+
+
+
+  </script>
+
+</head>
+
+<body style="height: 780px">
+  名字:
+  <input type="text" name="pateintName" value="Mickey" id="name" /> &nbsp;
+  FHIR patient id:
+  <input type="text" value="unknown" id="FHIRPtionID" /> <br />
+  <h2>FHIR 健康紀錄輸入範例</h2>
+  <h2>問題健康狀況</h2>
+  <ul>
+    <li><a href="lin.html"> 林宇婕的作品:新增</a></li>
+  </ul>
+  <ul>
+    <li><a href=" http://hapi.fhir.org/baseR4/Observation?subject=26965590"> 林宇婕的作品:調閱及呈現</a></li>
+  </ul>
+
+  </ul>
+
+
+
+
+</body>
+<script>
+  document.getElementById("FHIRPtionID").value = getCookie("patientID");
+  document.getElementById("name").value = getCookie("patientName");
+  //http://hapi.fhir.org/baseR4/Patient?organization=1921071
+  //http://hl7.org/fhir/SearchParameter/Observation-focus
+  //1921072
+  //https://hapi.fhir.org/baseR4/Observation/10672782
+  var myObj;
+  function callBack() {
+    alert(ret);
+    console.log(ret);
+    myObj = JSON.parse(ret);
+    //console.log(myObj.entry[0].resource.valueQuantity.value);
+  }
+  url = "https://hapi.fhir.org/baseR4/Observation?patient=";
+  console.log(myObj);
+  HTTPGetData(url + document.getElementById("FHIRPtionID").value);
+  console.log("passed 02");
+  //var data = myObj.entry[0].resource.valueQuantity.value;
+  alert(Object.keys(myObj.entry).length);
+  console.log(myObj.entry[0].resource.valueQuantity.value.text);
+
+</script>
+
+</html>
