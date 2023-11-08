@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consumer 子系統</title>
+</head>
+<body>
+    <h1>Consumer 子系統</h1>
+    <button type="button" onclick="getData()">查詢就醫及檢查信息</button>
+    <div id="medicalRecords">
+        <!-- 顯示查詢結果的區域 -->
+    </div>
+    <script>
+        function getData() {
+            // 模擬查詢就醫及檢查信息
+            fetch('http://localhost:3000/get-medical-records')
+            .then(response => response.json())
+            .then(data => {
+                const medicalRecordsDiv = document.getElementById('medicalRecords');
+                if (data.length > 0) {
+                    const result = data.map(record => `患者姓名: ${record.patientName}, 檢查結果: ${record.medicalResult}`).join('<br>');
+                    medicalRecordsDiv.innerHTML = result;
+                } else {
+                    medicalRecordsDiv.innerHTML = '未找到就醫及檢查信息';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
